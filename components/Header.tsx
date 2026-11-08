@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
@@ -10,8 +11,15 @@ export default function Header() {
   return (
     <header className="border-b border-cool/10 bg-white sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="font-headline text-2xl font-bold text-whizzo">
-          WHIZZO
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/whizzo-logo.png"
+            alt="Whizzo"
+            width={160}
+            height={40}
+            className="h-10 w-auto"
+            priority
+          />
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium">
           <Link href="/catalogue" className="hover:text-whizzo">
