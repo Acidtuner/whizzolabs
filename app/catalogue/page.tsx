@@ -1,14 +1,18 @@
 import Link from "next/link";
-import { CATALOGUE } from "@/lib/catalogue";
+import { getPublicCatalogue } from "@/lib/catalogue-queries";
 
-export default function CataloguePage() {
+export default async function CataloguePage() {
+  const products = await getPublicCatalogue();
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <h1 className="font-headline text-4xl font-bold mb-2">Catalogue</h1>
-      <p className="text-cool/70 mb-8">Series WIZTICTC01 · 4mm Pine MDF · 20 designs · 43 SKUs</p>
+      <p className="text-cool/70 mb-8">
+        {products.length} designs · from the live catalogue
+      </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {CATALOGUE.map((p) => (
+        {products.map((p) => (
           <Link
             key={p.uid}
             href={`/product/${p.variants[0].sku}`}
