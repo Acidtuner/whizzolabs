@@ -1,11 +1,14 @@
-import { mysqlTable, varchar, int, boolean, timestamp, text, decimal, mysqlEnum } from "drizzle-orm/mysql-core";
+import { mysqlTable, varchar, int, boolean, timestamp, text, mysqlEnum } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 36 }).primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: varchar("name", { length: 255 }),
+  passwordHash: varchar("password_hash", { length: 255 }),
   role: mysqlEnum("role", ["customer", "admin"]).notNull().default("customer"),
+  emailVerified: timestamp("email_verified"),
+  image: varchar("image", { length: 512 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
