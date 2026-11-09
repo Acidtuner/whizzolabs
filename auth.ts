@@ -7,40 +7,49 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
-  session: { strategy: "jwt" },
-  providers: [
+const providers = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    Credentials({
-      name: "credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-        const email = credentials.email as string;
-        const password = credentials.password as string;
+    })
+  );
+}
 
-        const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
-        if (!user || !user.passwordHash) return null;
+providers.push(
+  Credentials({
+    name: "credentials",
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
+    async authorize(credentials) {
+      if (!credentials?.email || !credentials?.password) return null;
+      const email = credentials.email as string;
+      const password = credentials.password as string;
 
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+      const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+      if (!user || !user.passwordHash) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
-      },
-    }),
-  ],
+      const valid = await bcrypt.compare(password, user.passwordHash);
+      if (!valid) return null;
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      };
+    },
+  })
+);
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: DrizzleAdapter(db),
+  session: { strategy: "jwt" },
+  providers,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
