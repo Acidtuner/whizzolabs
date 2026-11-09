@@ -1,14 +1,21 @@
 import { getOrderDetail } from "@/lib/admin-queries";
+import AdminShell from "@/components/AdminShell";
 import Link from "next/link";
 
 export default async function OrderDetailPage({ params }: { params: { id: string } }) {
   const data = await getOrderDetail(params.id);
-  if (!data) return <div>Order not found</div>;
+  if (!data) {
+    return (
+      <AdminShell>
+        <div>Order not found</div>
+      </AdminShell>
+    );
+  }
 
   const { order, items, address, history } = data;
 
   return (
-    <div>
+    <AdminShell>
       <Link href="/admin/orders" className="text-sm text-whizzo">← Back to orders</Link>
       <h1 className="font-headline text-3xl font-bold mt-2">{order.orderNumber}</h1>
       <div className="text-sm text-cool/60 mt-1">{order.email} · {order.status}</div>
@@ -65,6 +72,6 @@ export default async function OrderDetailPage({ params }: { params: { id: string
           </div>
         </div>
       </div>
-    </div>
+    </AdminShell>
   );
 }
