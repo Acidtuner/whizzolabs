@@ -1,33 +1,5 @@
-import Link from "next/link";
-import { headers } from "next/headers";
-import { requireAdmin } from "@/lib/admin-auth";
+export const dynamic = "force-dynamic";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const headerList = await headers();
-  const path = headerList.get("x-pathname") || "";
-
-  if (path.startsWith("/admin/login")) {
-    return <>{children}</>;
-  }
-
-  await requireAdmin();
-
-  return (
-    <div className="min-h-screen bg-cool/5">
-      <div className="bg-cool text-white">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/admin" className="font-headline font-bold text-joy">
-            WHIZZO Admin
-          </Link>
-          <nav className="flex gap-6 text-sm">
-            <Link href="/admin" className="hover:text-joy">Dashboard</Link>
-            <Link href="/admin/orders" className="hover:text-joy">Orders</Link>
-            <Link href="/admin/catalogue" className="hover:text-joy">Catalogue</Link>
-            <Link href="/admin/stock" className="hover:text-joy">Stock</Link>
-          </nav>
-        </div>
-      </div>
-      <div className="max-w-6xl mx-auto px-4 py-8">{children}</div>
-    </div>
-  );
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return children;
 }
