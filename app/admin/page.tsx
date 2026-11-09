@@ -1,8 +1,9 @@
 import Link from "next/link";
+import AdminShell from "@/components/AdminShell";
 
 export default function AdminDashboard() {
   return (
-    <div>
+    <AdminShell>
       <h1 className="font-headline text-3xl font-bold mb-6">Dashboard</h1>
       <div className="grid md:grid-cols-3 gap-4">
         <Link href="/admin/orders" className="bg-white border border-cool/10 rounded-xl p-5 hover:border-whizzo">
@@ -21,9 +22,6 @@ export default function AdminDashboard() {
           <div className="text-xs mt-2 text-whizzo">Adjust quantities, low stock</div>
         </Link>
       </div>
-      <div className="mt-8 text-sm text-cool/60">
-        Admin access is currently open in development. Set <code>ADMIN_BYPASS=false</code> and wire Auth.js for production.
-      </div>
-    </div>
+    </AdminShell>
   );
 }
