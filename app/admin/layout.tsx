@@ -1,8 +1,16 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { requireAdmin } from "@/lib/admin-auth";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  requireAdmin();
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const headerList = await headers();
+  const path = headerList.get("x-pathname") || "";
+
+  if (path.startsWith("/admin/login")) {
+    return <>{children}</>;
+  }
+
+  await requireAdmin();
 
   return (
     <div className="min-h-screen bg-cool/5">
