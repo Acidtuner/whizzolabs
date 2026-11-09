@@ -1,11 +1,26 @@
 "use server";
 
 import { db } from "@/db";
-import { orders, products, productVariants } from "@/db/schema";
+import { orders, products, productVariants, orderItems, addresses, orderStatusHistory } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 
 export async function getOrders() {
   return db.select().from(orders).orderBy(desc(orders.createdAt)).limit(100);
+}
+
+export async function getOrderDetail(orderId: string) {
+  const [order] = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+  if (!order) return null;
+
+  const items = await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  const [address] = await db.select().from(addresses).where(eq(addresses.orderId, orderId)).limit(1);
+  const history = await db
+    .select()
+    .from(orderStatusHistory)
+    .where(eq(orderStatusHistory.orderId, orderId))
+    .orderBy(desc(orderStatusHistory.createdAt));
+
+  return { order, items, address, history };
 }
 
 export async function getProductsWithVariants() {
