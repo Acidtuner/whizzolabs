@@ -2,8 +2,9 @@ import { getOrderDetail } from "@/lib/admin-queries";
 import AdminShell from "@/components/AdminShell";
 import Link from "next/link";
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
-  const data = await getOrderDetail(params.id);
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const data = await getOrderDetail(id);
   if (!data) {
     return (
       <AdminShell>
