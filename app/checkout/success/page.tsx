@@ -1,12 +1,13 @@
 import Link from "next/link";
 
-export default function SuccessPage({
+export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { order?: string; success?: string };
+  searchParams: Promise<{ order?: string; success?: string }>;
 }) {
-  const success = searchParams.success !== "false";
-  const order = searchParams.order || "—";
+  const params = await searchParams;
+  const success = params.success !== "false";
+  const order = params.order || "—";
 
   return (
     <div className="max-w-md mx-auto px-4 py-16 text-center">
