@@ -1,10 +1,11 @@
 import { getProductsWithVariants } from "@/lib/admin-queries";
+import AdminShell from "@/components/AdminShell";
 
 export default async function CatalogueAdminPage() {
   const products = await getProductsWithVariants();
 
   return (
-    <div>
+    <AdminShell>
       <h1 className="font-headline text-3xl font-bold mb-2">Catalogue</h1>
       <p className="text-sm text-cool/60 mb-6">{products.length} products</p>
 
@@ -36,6 +37,6 @@ export default async function CatalogueAdminPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </AdminShell>
   );
 }
